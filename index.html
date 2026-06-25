@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>K1 Automation</title>
+
+    <link rel="stylesheet" href="style.css">
+   <style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Inter, "Segoe UI", sans-serif;
+}
+
+body {
+    background: #0b1220;
+    color: #f3f4f6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    width: 1000px;
+    background: #111827;
+    border: 1px solid #1f2937;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,.45);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 30px;
+    border-bottom: 1px solid #1f2937;
+}
+
+.header h1 {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.header p {
+    margin-top: 6px;
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+.status {
+    padding: 8px 18px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.status.running {
+    background: rgba(34,197,94,.18);
+    color: #22c55e;
+}
+
+.status.stopped {
+    background: rgba(239,68,68,.18);
+    color: #ef4444;
+}
+
+.card {
+    margin: 25px;
+    padding: 22px;
+    background: #161f2f;
+    border: 1px solid #273449;
+    border-radius: 14px;
+}
+
+.card h2 {
+    margin-bottom: 22px;
+    font-size: 18px;
+}
+
+.inputs {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 20px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: #9ca3af;
+}
+
+.input-group input {
+    height: 46px;
+    border: 1px solid #334155;
+    background: #0f172a;
+    color: white;
+    border-radius: 10px;
+    padding: 0 15px;
+    font-size: 15px;
+    outline: none;
+    transition: .2s;
+}
+
+.input-group input:focus {
+    border-color: #3b82f6;
+}
+
+.buttons {
+    margin-top: 25px;
+    display: flex;
+    gap: 15px;
+}
+
+button {
+    border: none;
+    cursor: pointer;
+    transition: .25s;
+}
+
+.start-btn {
+    height: 48px;
+    padding: 0 28px;
+    background: #2563eb;
+    color: white;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.start-btn:hover {
+    background: #1d4ed8;
+}
+
+.stop-btn {
+    height: 48px;
+    padding: 0 28px;
+    background: #dc2626;
+    color: white;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.stop-btn:hover {
+    background: #b91c1c;
+}
+
+button:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+.logs-card {
+    margin-top: 0;
+}
+
+.logs-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+#clearLogs {
+    background: transparent;
+    border: 1px solid #334155;
+    color: #cbd5e1;
+    border-radius: 8px;
+    padding: 8px 14px;
+}
+
+#clearLogs:hover {
+    background: #1f2937;
+}
+
+#logs {
+    background: #0a0f1d;
+    border: 1px solid #1f2937;
+    border-radius: 12px;
+    height: 350px;
+    overflow-y: auto;
+    padding: 18px;
+    font-size: 14px;
+    font-family: Consolas, monospace;
+}
+
+.log-item {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 10px;
+    word-break: break-word;
+}
+
+.log-time {
+    color: #64748b;
+    min-width: 95px;
+}
+
+.log-message {
+    color: #f8fafc;
+}
+
+#logs::-webkit-scrollbar {
+    width: 8px;
+}
+
+#logs::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#logs::-webkit-scrollbar-thumb {
+    background: #374151;
+    border-radius: 20px;
+}
+
+@media (max-width: 900px) {
+
+    .container {
+        width: 95%;
+    }
+
+    .inputs {
+        grid-template-columns: 1fr;
+    }
+
+    .buttons {
+        flex-direction: column;
+    }
+
+    .start-btn,
+    .stop-btn {
+        width: 100%;
+    }
+
+}
+   </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="header">
+
+            <div>
+
+                <h1>K1 Withdrawal Automation</h1>
+
+                <p>
+                    Automate Withdraw Approval
+                </p>
+
+            </div>
+
+            <div id="status" class="status stopped">
+                ● Stopped
+            </div>
+
+        </div>
+
+        <div class="card">
+
+            <h2>Automation Settings</h2>
+
+            <div class="input-group">
+
+                <label>MPIN</label>
+
+                <input id="mpin" type="password" maxlength="4" placeholder="Enter MPIN">
+
+            </div>
+
+            <div class="inputs">
+
+                <div class="input-group">
+
+                    <label>
+                        Minimum Withdraw Amount
+                    </label>
+
+                    <input id="minAmount" type="number" value="1000">
+
+                </div>
+
+                <div class="input-group">
+
+                    <label>
+                        Maximum Withdraw Amount
+                    </label>
+
+                    <input id="maxAmount" type="number" value="4000">
+
+                </div>
+
+            </div>
+
+            <div class="buttons">
+
+                <button id="start" class="start-btn">
+                    ▶ Start Automation
+                </button>
+
+                <button id="stop" class="stop-btn" disabled>
+                    ■ Stop Automation
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="card logs-card">
+
+            <div class="logs-header">
+
+                <h2>Automation Logs</h2>
+
+                <button id="clearLogs">
+                    Clear Logs
+                </button>
+
+            </div>
+
+            <div id="logs">
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
