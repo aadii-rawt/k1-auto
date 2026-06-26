@@ -130,3 +130,37 @@ window.electron.onStatus((state) => {
 
 // Initial State
 setStatus(false);
+
+
+
+// instruction modal steps
+const instructionBtn =
+document.getElementById("instructionBtn");
+
+const instructionModal =
+document.getElementById("instructionModal");
+
+const closeInstruction =
+document.getElementById("closeInstruction");
+
+instructionBtn.addEventListener("click", () => {
+
+    instructionModal.classList.add("show");
+
+});
+
+closeInstruction.addEventListener("click", () => {
+
+    instructionModal.classList.remove("show");
+
+});
+
+instructionModal.addEventListener("click", (e) => {
+
+    if (e.target === instructionModal) {
+
+        instructionModal.classList.remove("show");
+
+    }
+
+});
